@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Pengiriman extends Model
+{
+    use HasFactory;
+
+    protected $table = 'pengiriman';
+
+    protected $fillable = [
+        'tgl_kirim',
+        'tgl_tiba',
+        'status_kirim',
+        'bukti_foto',
+        'id_pesan',
+        'id_user'
+    ];
+
+    protected $casts = [
+        'tgl_kirim' => 'datetime',
+        'tgl_tiba' => 'datetime',
+    ];
+
+      const STATUS = [
+        'Sedang Dikirim',
+        'Tiba Ditujuan'
+    ];
+
+    public function pemesanan()
+    {
+        return $this->belongsTo(Pemesanan::class, 'id_pesan');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user');
+    }
+}
