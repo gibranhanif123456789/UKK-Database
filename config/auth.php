@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'pelanggan' => [
+        'driver' => 'session',
+        'provider' => 'pelanggans',
+    ],
     ],
 
     /*
@@ -64,6 +68,10 @@ return [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
+            'pelanggans' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Pelanggan::class,
+    ],
 
         // 'users' => [
         //     'driver' => 'database',

@@ -4,12 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pemesanan;
+use Illuminate\Http\Request;
 
 class PemesananController extends Controller
 {
     public function index()
     {
-        $pemesanan = Pemesanan::with(['pelanggan', 'jenisBayar'])
+        $pemesanan = Pemesanan::with([
+                'pelanggan',
+                'jenisPembayaran'
+            ])
             ->latest()
             ->get();
 
@@ -18,7 +22,10 @@ class PemesananController extends Controller
 
     public function show(Pemesanan $pemesanan)
     {
-        $pemesanan->load(['pelanggan', 'detailPemesanan.paket']);
+        $pemesanan->load([
+            'pelanggan',
+            'detailPemesanan.paket'
+        ]);
 
         return view('admin.pemesanan.show', compact('pemesanan'));
     }

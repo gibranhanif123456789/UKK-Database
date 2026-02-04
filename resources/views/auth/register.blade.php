@@ -1,52 +1,108 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+    <div class="h-screen flex items-center justify-center px-4">
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-6">
+
+            {{-- HEADER --}}
+            <div class="text-center mb-6">
+                <div class="text-3xl mb-1">🍱</div>
+                <h1 class="text-xl font-extrabold text-slate-800">
+                    Daftar Akun
+                </h1>
+                <p class="text-sm text-slate-500 mt-1">
+                    Buat akun untuk mulai memesan catering
+                </p>
+            </div>
+
+            <form method="POST" action="{{ route('register') }}" class="space-y-4">
+                @csrf
+
+                {{-- NAMA --}}
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">
+                        Nama
+                    </label>
+                    <input
+                        type="text"
+                        name="name"
+                        value="{{ old('name') }}"
+                        placeholder="Nama lengkap"
+                        required
+                        autofocus
+                        class="w-full rounded-xl border-slate-300
+                               focus:border-emerald-500 focus:ring-emerald-500"
+                    >
+                    <x-input-error :messages="$errors->get('name')" class="mt-1" />
+                </div>
+
+                {{-- EMAIL --}}
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">
+                        Email
+                    </label>
+                    <input
+                        type="email"
+                        name="email"
+                        value="{{ old('email') }}"
+                        placeholder="email@contoh.com"
+                        required
+                        class="w-full rounded-xl border-slate-300
+                               focus:border-emerald-500 focus:ring-emerald-500"
+                    >
+                    <x-input-error :messages="$errors->get('email')" class="mt-1" />
+                </div>
+
+                {{-- PASSWORD --}}
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">
+                        Password
+                    </label>
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Minimal 8 karakter"
+                        required
+                        class="w-full rounded-xl border-slate-300
+                               focus:border-emerald-500 focus:ring-emerald-500"
+                    >
+                    <x-input-error :messages="$errors->get('password')" class="mt-1" />
+                </div>
+
+                {{-- KONFIRMASI PASSWORD --}}
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">
+                        Konfirmasi Password
+                    </label>
+                    <input
+                        type="password"
+                        name="password_confirmation"
+                        placeholder="Ulangi password"
+                        required
+                        class="w-full rounded-xl border-slate-300
+                               focus:border-emerald-500 focus:ring-emerald-500"
+                    >
+                    <x-input-error :messages="$errors->get('password_confirmation')" class="mt-1" />
+                </div>
+
+                {{-- BUTTON REGISTER --}}
+                <button
+                    type="submit"
+                    class="w-full bg-emerald-500 hover:bg-emerald-600
+                           text-slate-900 font-semibold py-2.5 rounded-xl transition">
+                    Daftar
+                </button>
+            </form>
+
+            {{-- LINK LOGIN --}}
+            <p class="text-center text-sm text-slate-500 mt-6">
+                Sudah punya akun?
+                <a href="{{ route('login') }}"
+                   class="font-semibold text-emerald-600 hover:underline">
+                    Login di sini
+                </a>
+            </p>
+
         </div>
+    </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
 </x-guest-layout>

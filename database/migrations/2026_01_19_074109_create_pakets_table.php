@@ -11,18 +11,27 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pakets', function (Blueprint $table) {
+    Schema::create('pakets', function (Blueprint $table) {
     $table->id();
-    $table->string('nama_paket');
-    $table->enum('jenis', ['Prasmanan', 'Box', 'Selamatan', 'Ulang Tahun', 'Studi Tour', 'Rapat']);
+    $table->string('nama_paket', 50);
+    $table->enum('jenis', ['Prasmanan', 'Box']);
+    $table->enum('kategori', [
+        'Pernikahan',
+        'Selamatan',
+        'Ulang Tahun',
+        'Studi Tour',
+        'Rapat'
+    ]);
     $table->integer('jumlah_pax');
-    $table->decimal('harga_paket', 10, 2);
+    $table->integer('harga_paket');
     $table->text('deskripsi')->nullable();
     $table->string('foto1')->nullable();
     $table->string('foto2')->nullable();
     $table->string('foto3')->nullable();
     $table->timestamps();
 });
+
+
     }
 
     /**

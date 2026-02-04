@@ -10,6 +10,10 @@ class Pemesanan extends Model
     use HasFactory;
 
     protected $table = 'pemesanans';
+    const STATUS_MENUNGGU_KONFIRMASI = 'Menunggu Konfirmasi';
+    const STATUS_DIPROSES = 'Sedang Diproses';
+    const STATUS_MENUNGGU_KURIR = 'Menunggu Kurir';
+
 
     
     protected $fillable = [

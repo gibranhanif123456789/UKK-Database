@@ -6,61 +6,61 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PaketController;
 use App\Http\Controllers\Admin\JenisPembayaranController;
 use App\Http\Controllers\Admin\PemesananController;
+use App\Http\Controllers\User\HomeController;
+use App\Http\Controllers\User\PaketController as UserPaketController;
+use App\Http\Controllers\User\PemesananController as UserPemesananController;
+use App\Http\Controllers\Auth\PelangganAuthController;
+
+/*
+|--------------------------------------------------------------------------
+| USER / PUBLIC
+|--------------------------------------------------------------------------
+*/
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::get('/paket', [UserPaketController::class, 'index'])
+    ->name('paket.index');
+
+Route::get('/paket/{paket}', [UserPaketController::class, 'show'])
+    ->name('paket.show');
 
 
 /*
 |--------------------------------------------------------------------------
-| Public
+| USER PESAN (WAJIB LOGIN PELANGGAN)
 |--------------------------------------------------------------------------
 */
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::middleware('auth:pelanggan')->group(function () {
+    Route::get('/pesan/{paket}', [UserPemesananController::class, 'create'])
+        ->name('user.pesan');
 
-/*
-|--------------------------------------------------------------------------
-| Authenticated User (Breeze)
-|--------------------------------------------------------------------------
-*/
-Route::middleware('auth')->group(function () {
+    Route::post('/pesan', [UserPemesananController::class, 'store'])
+        ->name('user.pesan.store');
 
-    // dashboard default (boleh dipakai / atau nanti dihapus)
-    Route::get('/dashboard', function () {
-    $user = Auth::user();
+    
+    // ✅ PESANAN BERHASIL
+    Route::get('/pesanan/berhasil/{pemesanan}', [UserPemesananController::class, 'success'])
+        ->name('user.pesan.success');
 
-    if ($user->level === 'admin') {
-        return redirect()->route('admin.dashboard');
-    }
+    // ✅ RIWAYAT PESANAN
+    Route::get('/riwayat-pesanan', [UserPemesananController::class, 'riwayat'])
+        ->name('user.pesanan.riwayat');
 
-    if ($user->level === 'owner') {
-        return redirect('/owner/dashboard');
-    }
+        
+Route::post('/logout-pelanggan', [PelangganAuthController::class, 'logout'])
+    ->name('pelanggan.logout');
 
-    if ($user->level === 'kurir') {
-        return redirect('/kurir/dashboard');
-    }
-
-    // default fallback
-    return redirect('/');
-})->middleware(['auth'])->name('dashboard');
-
-    // profile (bawaan Breeze)
-    Route::get('/profile', [ProfileController::class, 'edit'])
-        ->name('profile.edit');
-
-    Route::patch('/profile', [ProfileController::class, 'update'])
-        ->name('profile.update');
-
-    Route::delete('/profile', [ProfileController::class, 'destroy'])
-        ->name('profile.destroy');
+    
 });
 
+
+
 /*
 |--------------------------------------------------------------------------
-| Admin Area
+| ADMIN AREA (BREEZE)
 |--------------------------------------------------------------------------
 */
-Route::middleware('auth')
+Route::middleware('auth:web')
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
@@ -72,11 +72,34 @@ Route::middleware('auth')
         Route::resource('jenis-pembayaran', JenisPembayaranController::class);
         Route::resource('pemesanan', PemesananController::class)
             ->except(['create', 'store']);
+            Route::get(
+    'jenis-pembayaran/{jenis-pembayaran}/detail',
+    [JenisPembayaranController::class, 'detail']
+)->name('jenis-pembayaran.detail');
     });
+
 
 /*
 |--------------------------------------------------------------------------
-| Auth Routes (Breeze)
+| PROFILE (ADMIN)
 |--------------------------------------------------------------------------
 */
-require __DIR__ . '/auth.php';
+Route::middleware('auth:web')->group(function () {
+
+    Route::get('/profile', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::patch('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+
+    Route::delete('/profile', [ProfileController::class, 'destroy'])
+        ->name('profile.destroy');
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| AUTH BREEZE
+|--------------------------------------------------------------------------
+*/
+require __DIR__.'/auth.php';

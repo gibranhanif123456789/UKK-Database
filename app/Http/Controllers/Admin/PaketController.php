@@ -19,21 +19,44 @@ class PaketController extends Controller
         return view('admin.paket.create');
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nama_paket'  => 'required|max:50',
-            'jenis'       => 'required',
-            'kategori'    => 'required',
-            'jumlah_pax'  => 'required|integer|min:1',
-            'harga_paket' => 'required|integer|min:0',
-        ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'nama_paket'  => 'required|max:50',
+        'jenis'       => 'required|in:Prasmanan,Box',
+        'kategori'    => 'required|in:Pernikahan,Selamatan,Ulang Tahun,Studi Tour,Rapat',
+        'jumlah_pax'  => 'required|integer|min:1',
+        'harga_paket' => 'required|numeric|min:0',
+        'deskripsi'   => 'nullable|string',
+        'foto1'       => 'nullable|image',
+        'foto2'       => 'nullable|image',
+        'foto3'       => 'nullable|image',
+    ]);
 
-        Paket::create($request->all());
+    $data = $request->only([
+        'nama_paket',
+        'jenis',
+        'kategori',
+        'jumlah_pax',
+        'harga_paket',
+        'deskripsi',
+    ]);
 
-        return redirect()->route('admin.paket.index')
-            ->with('success', 'Paket berhasil ditambahkan');
+    // upload foto
+    foreach (['foto1','foto2','foto3'] as $foto) {
+        if ($request->hasFile($foto)) {
+            $data[$foto] = $request->file($foto)->store('paket', 'public');
+        }
     }
+
+    Paket::create($data);
+
+    return redirect()
+        ->route('admin.paket.index')
+        ->with('success', 'Paket berhasil ditambahkan');
+}
+
+
 
     public function edit(Paket $paket)
     {
@@ -43,11 +66,15 @@ class PaketController extends Controller
     public function update(Request $request, Paket $paket)
     {
         $request->validate([
-            'nama_paket'  => 'required',
-            'jenis'       => 'required',
-            'kategori'    => 'required',
-            'jumlah_pax'  => 'required|integer',
-            'harga_paket' => 'required|integer',
+            'nama_paket'  => 'required|max:50',
+            'jenis'       => 'required|in:Prasmanan,Box',
+            'kategori'    => 'required|in:Pernikahan,Selamatan,Ulang Tahun,Studi Tour,Rapat',
+            'jumlah_pax'  => 'required|integer|min:1',
+            'harga_paket' => 'required|integer|min:0',
+             'deskripsi'   => 'nullable|string',
+            'foto1'       => 'nullable|image',
+            'foto2'       => 'nullable|image',
+            'foto3'       => 'nullable|image',
         ]);
 
         $paket->update($request->all());
