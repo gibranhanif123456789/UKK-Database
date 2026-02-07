@@ -30,20 +30,31 @@ class AuthenticatedSessionController extends Controller
     ]);
 
     // 1️⃣ Coba login ADMIN (users)
-    if (Auth::guard('web')->attempt($credentials)) {
+        if (Auth::guard('web')->attempt($credentials)) {
         $request->session()->regenerate();
 
-        return redirect()->route('admin.dashboard');
+        $user = Auth::guard('web')->user();
+
+        return match ($user->level) {
+            'admin' => redirect()->route('admin.dashboard'),
+            'kurir' => redirect()->route('kurir.dashboard'),
+            'owner' => redirect()->route('owner.dashboard'),
+            default => redirect('/login'),
+        };
     }
 
-    // 2️⃣ Coba login PELANGGAN
+     /**
+     * 2️⃣ LOGIN PELANGGAN
+     */
     if (Auth::guard('pelanggan')->attempt($credentials)) {
         $request->session()->regenerate();
 
         return redirect()->route('home');
     }
 
-    // 3️⃣ Kalau dua-duanya gagal
+      /**
+     * 3️⃣ GAGAL SEMUA
+     */
     return back()->withErrors([
         'email' => 'Email atau password salah',
     ]);
@@ -54,13 +65,19 @@ class AuthenticatedSessionController extends Controller
      * Destroy an authenticated session.
      */
     public function destroy(Request $request): RedirectResponse
-    {
+{
+    if (Auth::guard('web')->check()) {
         Auth::guard('web')->logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
-        return redirect('/');
     }
+
+    if (Auth::guard('pelanggan')->check()) {
+        Auth::guard('pelanggan')->logout();
+    }
+
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect('/');
+}
+
 }

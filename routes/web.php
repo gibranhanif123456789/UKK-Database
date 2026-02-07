@@ -10,6 +10,12 @@ use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\PaketController as UserPaketController;
 use App\Http\Controllers\User\PemesananController as UserPemesananController;
 use App\Http\Controllers\Auth\PelangganAuthController;
+use App\Http\Controllers\Kurir\KurirDashboardController;
+use App\Http\Controllers\Kurir\KurirPesananController;
+use App\Http\Controllers\Owner\OwnerDashboardController;
+use App\Http\Controllers\Owner\OwnerPesananController;
+use App\Http\Controllers\Owner\OwnerUserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -75,9 +81,57 @@ Route::middleware('auth:web')
             Route::get(
     'jenis-pembayaran/{jenis-pembayaran}/detail',
     [JenisPembayaranController::class, 'detail']
-)->name('jenis-pembayaran.detail');
+        )->name('jenis-pembayaran.detail');
     });
 
+Route::middleware('auth:web')
+    ->prefix('kurir')
+    ->name('kurir.')
+    ->group(function () {
+
+        Route::get('/dashboard', function () {
+            abort_if(auth()->user()->level !== 'kurir', 403);
+            return view('kurir.dashboard');
+        })->name('dashboard');
+          Route::get('/dashboard', [KurirDashboardController::class, 'index'])
+            ->name('dashboard');
+
+        Route::get('/pesanan', [KurirPesananController::class, 'index'])
+            ->name('pesanan');
+
+        Route::get('/pesanan/{id}', [KurirPesananController::class, 'show'])
+            ->name('pesanan.detail');
+
+        Route::post('/pesanan/{id}/ambil', [KurirPesananController::class, 'ambil'])
+            ->name('pesanan.ambil');
+
+        Route::post('/pesanan/{id}/selesai', [KurirPesananController::class, 'selesai'])
+            ->name('pesanan.selesai');
+    });
+
+Route::middleware('auth:web')
+    ->prefix('owner')
+    ->name('owner.')
+    ->group(function () {
+
+        Route::get('/dashboard', [OwnerDashboardController::class, 'index'])
+            ->name('dashboard');
+
+        Route::get('/pesanan', [OwnerPesananController::class, 'index'])
+            ->name('pesanan');
+
+        Route::get('/pesanan/{id}', [OwnerPesananController::class, 'show'])
+            ->name('pesanan.detail');
+
+        Route::get('/users', [OwnerUserController::class, 'index'])
+            ->name('users.index');
+
+        Route::get('/users/create', [OwnerUserController::class, 'create'])
+            ->name('users.create');
+
+        Route::post('/users', [OwnerUserController::class, 'store'])
+            ->name('users.store');
+    });
 
 /*
 |--------------------------------------------------------------------------
@@ -95,6 +149,9 @@ Route::middleware('auth:web')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])
         ->name('profile.destroy');
 });
+
+
+
 
 
 /*

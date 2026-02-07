@@ -18,6 +18,7 @@ return new class extends Migration
           ->onDelete('cascade');
     $table->string('no_rek')->nullable();
     $table->string('tempat_bayar')->nullable();
+    $table->string('logo');
     $table->timestamps();
 });
     }

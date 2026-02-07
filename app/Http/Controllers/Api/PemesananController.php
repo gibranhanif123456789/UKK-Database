@@ -68,4 +68,13 @@ public function show($id)
             'data' => $pemesanan
         ], 201);
     }
+    public function forKurir()
+{
+    $pesanan = Pemesanan::with(['pelanggan', 'jenisPembayaran', 'detailPemesanan.paket'])
+                        ->where('status_pesan', 'Menunggu Kurir')
+                        ->latest()
+                        ->get();
+
+    return response()->json($pesanan);
+}
 }

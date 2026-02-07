@@ -13,3 +13,4 @@ Route::get('/test', function () {
 Route::post('/pemesanan', [PemesananController::class, 'store']);
 Route::get('/paket', [PaketController::class, 'index']);
 Route::get('/pemesanan', [PemesananController::class, 'index']);
+Route::get('/kurir/pesanan', [PemesananController::class, 'forKurir']);
