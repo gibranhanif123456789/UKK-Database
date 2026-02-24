@@ -30,7 +30,8 @@ Route::get('/paket', [UserPaketController::class, 'index'])
 Route::get('/paket/{paket}', [UserPaketController::class, 'show'])
     ->name('paket.show');
 
-
+// HAPUS BARIS INI:
+Route::get('logout', [PelangganAuthController::class, 'logout'])->name('logout.get');
 /*
 |--------------------------------------------------------------------------
 | USER PESAN (WAJIB LOGIN PELANGGAN)
@@ -58,6 +59,8 @@ Route::post('/logout-pelanggan', [PelangganAuthController::class, 'logout'])
 
     
 });
+
+
 
 
 

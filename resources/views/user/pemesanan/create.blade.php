@@ -203,7 +203,7 @@
                                            class="w-full rounded-xl border border-slate-200 px-4 py-3 bg-slate-50 text-slate-600"
                                            readonly>
                                 </div>
-                                <div>
+                                {{-- <div>
                                     <label class="block text-sm font-medium text-slate-700 mb-2">
                                         No. Telepon
                                     </label>
@@ -211,7 +211,7 @@
                                            value="{{ $pelanggan->no_hp }}"
                                            class="w-full rounded-xl border border-slate-200 px-4 py-3 bg-slate-50 text-slate-600"
                                            readonly>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
 

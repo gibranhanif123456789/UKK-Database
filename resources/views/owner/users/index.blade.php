@@ -171,16 +171,7 @@
                                 </div>
                             </td>
                             
-                            <td class="p-4">
-                                <div class="text-center space-y-1">
-                                    <p class="text-sm font-medium text-slate-800">
-                                        {{ $user->created_at->format('d M Y') }}
-                                    </p>
-                                    <p class="text-xs text-slate-500">
-                                        {{ $user->created_at->diffForHumans() }}
-                                    </p>
-                                </div>
-                            </td>
+                            
                         </tr>
                         @endforeach
                     </tbody>
@@ -195,7 +186,7 @@
                         Menampilkan {{ $users->count() }} user
                     </div>
                     <div class="text-slate-500">
-                        Total: {{ $users->total() }} user terdaftar
+                        {{-- Total: {{ $users->total() }} user terdaftar --}}
                     </div>
                 </div>
             </div>
